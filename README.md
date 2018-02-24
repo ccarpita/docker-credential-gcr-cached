@@ -1,10 +1,10 @@
 # docker-credential-gcr-cached
 
-A tiny one-off script to intercept and speed-up Google Container Registry (GCR) credentials requests, which may have a vast cascading performance impact on docker build operations.
+A tiny one-off POSIX script to intercept and speed-up Google Container Registry (GCR) credentials requests, which may have a vast cascading performance impact on docker build initialization.
 
 # The Problem
 
-Based on the author's syscall analysis of docker builds (version 17.12.0-ce), it seems that multiple requests are made in a serial fashion to the credHelpers entries in the `$HOME/.docker/config.json` file.  Even if "gcr" is used in place of "gcloud", build operations can be delayed by more than ten seconds (!) due to the many un-cached blocking requests made to retrieve credentials for gcr.io and other regional cnames.  A lot of gains can be made by removing the regional cname entries (anything not "gcr.io") from the docker configuration, but there is still a noticeable multi-second delay.  That's where this script comes in handy!
+Based on the author's syscall analysis of docker builds (version 17.12.0-ce), it seems that multiple requests are made in a serial fashion to the `credHelpers` entries in the `$HOME/.docker/config.json` file.  Even if "gcr" is used in place of "gcloud", build operations can be delayed by more than ten seconds (!) due to the many un-cached blocking requests made to retrieve credentials for gcr.io and other regional cnames.  A lot of gains can be made by removing the regional cname entries (anything not "gcr.io") from the docker configuration, but there is still a noticeable multi-second delay.  That's where this script comes in handy!
 
 # A Solution
 
